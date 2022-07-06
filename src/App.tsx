@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler, MouseEventHandler, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 
 import { Term } from './Interfaces'
 import { Operator } from './Types'
@@ -71,6 +71,18 @@ function App(): JSX.Element {
     setTerms(updatedTerms)
   }
 
+  function changeTermNumber(e: FormEvent<HTMLInputElement>, id: number): void {
+    const updatedTerms = terms.map(term => {
+      if (term.id === id) {
+        term.number = Number(e.target.value)
+      }
+
+      return term
+    })
+
+    setTerms(updatedTerms)
+  }
+
   function changeNewTermOperator(event: ChangeEvent<HTMLSelectElement>): void {
     setNewTerm({
       ...newTerm,
@@ -101,7 +113,12 @@ function App(): JSX.Element {
                 <option value='+' selected={term.operator === '+'} className='text-cool-dark'>+</option>
                 <option value='-' selected={term.operator === '-'} className='text-cool-dark'>-</option>
               </select>
-              <input type='text' className='p-1 bg-cool-white bg-opacity-0 border-b-cool-white border-b' value={term.number}/>
+              <input
+                type='number'
+                className='p-1 bg-cool-white bg-opacity-0 border-b-cool-white border-b'
+                value={term.number}
+                onInput={(e) => changeTermNumber(e, term.id)}
+              />
               <button
                 className='cursor-pointer p-2 border-2 border-cool-mid-blue rounded-full bg-cool-blue font-semibold'
                 onClick={() => deleteTerm(term.id)}
